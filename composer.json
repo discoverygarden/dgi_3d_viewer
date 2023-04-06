@@ -1,0 +1,6 @@
+{
+  "name": "discoverygarden/dgi_3d_viewer",
+  "type": "drupal-module",
+  "description": "Provide a viewer for 3D objects in Drupal.",
+  "license": "GPL-3.0-only"
+}

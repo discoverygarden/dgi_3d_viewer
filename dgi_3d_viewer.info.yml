@@ -1,0 +1,5 @@
+name: DGI 3D Viewer
+description: View 3D objects in Drupal.
+package: Media
+type: module
+core_version_requirement: ^9
