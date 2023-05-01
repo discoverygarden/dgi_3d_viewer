@@ -2,6 +2,10 @@
   "name": "dgi_3d_viewer",
   "version": "1.0.0",
   "description": "3D Viewer",
+  "private": true,
+  "engines": {
+    "node": ">= 16.0"
+  },
   "scripts": {
     "build-test": "webpack --config webpack_test_threejs.config.js"
   },
