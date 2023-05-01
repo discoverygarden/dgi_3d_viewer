@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "3D Viewer",
   "scripts": {
-    "build": "webpack --config webpack.config.js"
+    "build-test": "webpack --config webpack_test_threejs.config.js"
   },
   "license": "GPL-3.0",
   "devDependencies": {
