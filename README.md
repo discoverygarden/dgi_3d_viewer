@@ -17,7 +17,7 @@ then we can simply use the three.js library directly, without compiling.
 
 ## Requirements (for development)
 This module requires the following modules/libraries:
-* [Three.js r151](https://github.com/mrdoob/three.js/releases/tag/r151 )
+* [Three.js 0.151.0](https://github.com/mrdoob/three.js/releases/tag/r151 )
   * And the following 'Add-ons':
     * [GLTFLoader](https://github.com/mrdoob/three.js/blob/r151/examples/jsm/loaders/GLTFLoader.js)
 * [Node.js](https://nodejs.org/en/)
@@ -63,7 +63,7 @@ adjust the webpack.config.js file accordingly.
     "libraries/{$name}": ["type:npm-asset"]
   }
   ```
-2. Run `composer require npm-asset/three:<current required version>` in the drupal-project root directory.
+2. Run `composer require npm-asset/three:^0.151.0` in the drupal-project root directory.
 
 #### A manual way to install three.js:
 1. In `/opt/www/drupal/libraries`, run `git clone --branch=<version tag> --depth=1 https://github.com/mrdoob/three.js.git`
@@ -72,7 +72,12 @@ adjust the webpack.config.js file accordingly.
 ### Three.js Library Compilation
 1. In the module root directory, run `npm install` to install the required packages.
 2. Make sure the three.js library is installed in the correct location expected by webpack.config.js.
-3. Make desired changes to the `js/*.es6.js` file(s), and run `npm run build` to compile it to `js/*.js`.
+3. Make desired changes to the `js/*.es6.js` file(s), and run `webpack` to compile it to `js/*.js`.
+
+For an example of compilation, and a way to check if issues are with your code
+changes or the rest of the setup, see `js/test_threejs.es6.js`,
+`webpack_test_threejs.config.js`, and the `build-test` script in `package.json`.
+Try deleting `js/test_threejs.js` and recompiling it with `npm run build-test`.
 
 ## TODO
 * Add support for more 3D model formats.
