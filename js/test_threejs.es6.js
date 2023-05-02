@@ -13,7 +13,12 @@ const loader = new GLTFLoader();
 
     attach: function (context, drupalSettings) {
       if (typeof THREE !== "undefined") {
-        this.renderThreeJS();
+        if (document.body.getAttribute('class') !== 'test-threejs-loaded') {
+          this.renderThreeJS();
+        }
+        else {
+          console.log('Attempted to load ThreeJS test, but it has already been loaded.');
+        }
       }
       else {
         console.log('THREE is undefined');
@@ -38,6 +43,7 @@ const loader = new GLTFLoader();
       renderer.setSize( window.innerWidth, window.innerHeight );
       renderer.setAnimationLoop( animation );
       document.body.appendChild( renderer.domElement );
+      document.body.setAttribute('class', 'test-threejs-loaded');
 
       // animation
 

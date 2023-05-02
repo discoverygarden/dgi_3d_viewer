@@ -25,8 +25,6 @@ class DgiThreejsFileWidget extends FileWidget
      */
     public static function process($element, FormStateInterface $form_state, $form)
     {
-        // Testing library loading.
-        $element['#attached']['library'][] = 'dgi_3d_viewer/test_threejs';
         // If file is uploaded, check if it is a supported format.
         if (!empty($element['#files'])) {
             $file = reset($element['#files']);
@@ -58,6 +56,9 @@ class DgiThreejsFileWidget extends FileWidget
                 ];
             }
         }
+        // Testing library loading.
+        $element['#attached']['library'][] = 'dgi_3d_viewer/test_threejs';
+        dpm('processing element');
         return parent::process($element, $form_state, $form);
     }
 }
