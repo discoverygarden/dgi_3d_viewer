@@ -9,3 +9,16 @@ test_threejs:
     - core/once
     - core/drupal
     - core/drupalSettings
+
+# The compiled js for rendering a viewer powered by Three.js
+dgi_3d_viewer:
+  js:
+    js/dgi_3d_viewer.js:
+      attributes:
+        async: true
+        type: module
+  dependencies:
+    - core/jquery
+    - core/once
+    - core/drupal
+    - core/drupalSettings

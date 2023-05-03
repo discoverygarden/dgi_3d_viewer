@@ -57,7 +57,7 @@ class DgiThreejsFileWidget extends FileWidget
             }
         }
         // Testing library loading.
-        $element['#attached']['library'][] = 'dgi_3d_viewer/test_threejs';
+        $element['#attached']['library'][] = 'dgi_3d_viewer/dgi_3d_viewer';
         dpm('processing element');
         return parent::process($element, $form_state, $form);
     }
