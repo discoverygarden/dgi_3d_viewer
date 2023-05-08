@@ -1,0 +1,11 @@
+# Test library for compiling threejs pieces into a single file.
+test_threejs:
+  js:
+    js/test_threejs.js:
+      attributes:
+        type: module
+  dependencies:
+    - core/jquery
+    - core/once
+    - core/drupal
+    - core/drupalSettings
