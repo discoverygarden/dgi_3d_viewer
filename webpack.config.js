@@ -20,6 +20,7 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
+            compact: false,
             presets: [
               [
                 '@babel/preset-env',

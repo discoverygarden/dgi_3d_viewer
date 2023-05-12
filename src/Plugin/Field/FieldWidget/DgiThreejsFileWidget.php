@@ -2,7 +2,6 @@
 
 namespace Drupal\dgi_3d_viewer\Plugin\Field\FieldWidget;
 
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Plugin\Field\FieldWidget\FileWidget;
 
@@ -19,46 +18,81 @@ use Drupal\file\Plugin\Field\FieldWidget\FileWidget;
  */
 class DgiThreejsFileWidget extends FileWidget
 {
+    /**
+     * @inheritDoc
+     */
+    public static function defaultSettings(): array
+    {
+        // TODO: Change how the preview settings are defined.
+        // Some settings will be exposed to the user in the widget settings
+        // form when the configurable camera work is done, and some will be
+        // defined as default settings. The defaults should be defined in a way
+        // that allows them to be retrieved by the formatter as well.
+        $preview_settings = [
+            'width' => '100%',
+            'height' => '400px',
+            'file_url' => '',
+            'container_classes' => ['dgi-3d-viewer-canvas'],
+            'progress_element_classes' => ['dgi-3d-viewer-progress'],
+            'perspective_camera_settings' => [ // https://threejs.org/docs/#api/en/cameras/PerspectiveCamera
+                'fov' => 50,
+                'near' => 0.1,
+                'far' => 2000,
+                'position' => [
+                    'x' => 0, // left / right
+                    'y' => 0, // up / down
+                    'z' => 25, // forward / backward, 0 is center, which is likely inside the model.
+                ],
+                'rotation' => [
+                    'x' => 0,
+                    'y' => 0,
+                    'z' => 0,
+                ],
+            ],
+        ];
+        return [
+          'preview_settings' => $preview_settings
+        ] + parent::defaultSettings();
+    }
 
     /**
      * @inheritDoc
      */
     public static function process($element, FormStateInterface $form_state, $form)
     {
+        $preview_settings = static::defaultSettings()['preview_settings'];
         // If file is uploaded, check if it is a supported format.
         if (!empty($element['#files'])) {
             $file = reset($element['#files']);
             $supported_formats = ['gltf', 'glb'];
-            if (!in_array(pathinfo($file->getFileUri(), PATHINFO_EXTENSION), $supported_formats)) {
-                $form_state->setError($element, t('The file type is not supported for viewing.'));
+            $file_ext = pathinfo($file->getFileUri(), PATHINFO_EXTENSION);
+            if (!in_array($file_ext, $supported_formats)) {
+                return parent::process($element, $form_state, $form);
             }
             else {
                 // The file exists and is a supported format, so we can add the viewer.
-                // $element['#theme'] = 'dgi_3d_file_widget';
-                // The only supported format is glTF (so far),
-                // so no need to check which Loader to use, but making that a variable
-                // now, so it's easier to change in the future when more Loaders are supported.
-                $loader = 'GLTFLoader';
-//          $element['#attached']['library'][] = 'dgi_3d_viewer/dgi_3d_viewer';
+                $preview_settings['file_url'] = $file->createFileUrl();
                 // Define the preview container.
                 $element['preview'] = [
-                    '#theme' => 'canvas',
-                    '#width' => '100%',
-                    '#height' => '400px',
-                    '#uri' => $file->getFileUri(),
+                    '#theme' => 'container',
                     '#attributes' => [
-                        'class' => [
-                            'dgi-3d-viewer',
-                        ],
-                        'data-model' => $file->getFileUri(),
-                        'data-loader' => $loader,
+                        'class' => $preview_settings['container_classes'],
+                        'style' => 'width: ' . $preview_settings['width'] . '; height: ' . $preview_settings['height'] . ';',
+                    ],
+                ];
+                $element['preview']['#children']['progress'] = [
+                    '#type' => 'html_tag',
+                    '#tag' => 'span',
+                    '#value' => t('Rendering...'),
+                    '#attributes' => [
+                        'class' => $preview_settings['progress_element_classes'],
                     ],
                 ];
             }
         }
-        // Testing library loading.
+        // Add the library and settings to the element.
+        $element['#attached']['drupalSettings']['dgi3DViewer'] = $preview_settings;
         $element['#attached']['library'][] = 'dgi_3d_viewer/dgi_3d_viewer';
-        dpm('processing element');
         return parent::process($element, $form_state, $form);
     }
 }

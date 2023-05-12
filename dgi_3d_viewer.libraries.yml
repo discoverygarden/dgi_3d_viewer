@@ -6,7 +6,6 @@ test_threejs:
         type: module
   dependencies:
     - core/jquery
-    - core/once
     - core/drupal
     - core/drupalSettings
 
@@ -15,10 +14,8 @@ dgi_3d_viewer:
   js:
     js/dgi_3d_viewer.js:
       attributes:
-        async: true
         type: module
   dependencies:
     - core/jquery
-    - core/once
     - core/drupal
     - core/drupalSettings
