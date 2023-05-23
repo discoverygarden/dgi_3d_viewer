@@ -5,6 +5,7 @@
  * Hook implementations.
  */
 
+use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\paragraphs\ParagraphInterface;
 use Drupal\media\MediaInterface;
 
@@ -65,4 +66,12 @@ function dgi_3d_viewer_flatten_camera_values(ParagraphInterface $camera) {
   }
 
   return $camera_settings;
+}
+
+/**
+ * Implements hook_js_settings_alter().
+ */
+function dgi_3d_viewer_js_settings_alter(array &$settings, AttachedAssetsInterface $assets) {
+  // If you want to push only a single value.
+  $settings['isProd'] = \Drupal::config('config_split.config_split.prod')->get('status');
 }
