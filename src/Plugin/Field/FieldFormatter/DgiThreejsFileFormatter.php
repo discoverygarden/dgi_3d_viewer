@@ -71,12 +71,17 @@ class DgiThreejsFileFormatter extends FileFormatterBase {
     if ($file_url) {
       $viewer_settings = $this->getSetting('viewer_settings');
       $viewer_settings['file_url'] = $file_url;
+      $viewer_settings['model_ext'] = pathinfo($file_url, PATHINFO_EXTENSION);
       if ($customCamera = $parent->field_customcamera->value) {
         $viewer_settings['camera_settings'] = unserialize($customCamera, ['allowed_classes' => FALSE]);
       }
 
       if ($light = $parent->field_light->value) {
         $viewer_settings['light'] = $light;
+      }
+
+        if ($objArchive = $parent->field_materials_zip) {
+        $viewer_settings['compressed_resources_url'] = $objArchive->entity->createFileUrl();
       }
 
       $this->setSetting('viewer_settings', $viewer_settings);

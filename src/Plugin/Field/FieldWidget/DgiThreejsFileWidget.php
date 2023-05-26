@@ -22,11 +22,6 @@ class DgiThreejsFileWidget extends FileWidget {
    * @inheritDoc
    */
   public static function defaultSettings(): array {
-    // @todo Change how the preview settings are defined.
-    // Some settings will be exposed to the user in the widget settings
-    // form when the configurable camera work is done, and some will be
-    // defined as default settings. The defaults should be defined in a way
-    // that allows them to be retrieved by the formatter as well.
     $preview_settings = [
       'width' => '100%',
       'height' => '400px',
@@ -63,23 +58,24 @@ class DgiThreejsFileWidget extends FileWidget {
     // If file is uploaded, check if it is a supported format.
     if (!empty($element['#files'])) {
       $file = reset($element['#files']);
-      $supported_formats = ['gltf', 'glb'];
+      $supported_formats = ['gltf', 'glb', 'obj'];
       $file_ext = pathinfo($file->getFileUri(), PATHINFO_EXTENSION);
       if (!in_array($file_ext, $supported_formats)) {
         return parent::process($element, $form_state, $form);
       }
       else {
+        $preview_settings['model_ext'] = $file_ext;
         // If this is an ajax call, this does not really work
         // because update of drupalSettings requires a page reload.
-        $camera = $form_state->getValue('field_camera')[0]['subform'] ?? NULL;
-
-        if ($camera) {
-          $preview_settings['camera_settings'] = self::cameraArrayToThreejsSettings($camera);
-        }
-
-        if (!empty($form_state->getValue('field_light'))) {
-          $preview_settings['light'] = $form_state->getValue('field_light');
-        }
+//        $camera = $form_state->getValue('field_camera')[0]['subform'] ?? NULL;
+//
+//        if ($camera) {
+//          $preview_settings['camera_settings'] = self::cameraArrayToThreejsSettings($camera);
+//        }
+//
+//        if (!empty($form_state->getValue('field_light'))) {
+//          $preview_settings['light'] = $form_state->getValue('field_light');
+//        }
 
         // The file exists and is a supported format, so we can add the viewer.
         $preview_settings['file_url'] = $file->createFileUrl();
@@ -101,6 +97,7 @@ class DgiThreejsFileWidget extends FileWidget {
         ];
       }
     }
+
     // Add the library and settings to the element.
     $element['#attached']['drupalSettings']['dgi3DViewer'] = $preview_settings;
     $element['#attached']['library'][] = 'dgi_3d_viewer/dgi_3d_viewer';

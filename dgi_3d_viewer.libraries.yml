@@ -1,7 +1,7 @@
 # Test library for compiling threejs pieces into a single file.
 test_threejs:
   js:
-    js/test_threejs.js:
+    js/dist/test_threejs.js:
       attributes:
         type: module
   dependencies:
@@ -12,7 +12,7 @@ test_threejs:
 # The compiled js for rendering a viewer powered by Three.js
 dgi_3d_viewer:
   js:
-    js/dgi_3d_viewer.js:
+    js/dist/dgi_3d_viewer.js:
       attributes:
         type: module
   dependencies:

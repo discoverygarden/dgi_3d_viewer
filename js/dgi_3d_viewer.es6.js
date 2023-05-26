@@ -40,13 +40,20 @@ import {ThreeDViewer} from './ThreeDViewer.js';
 
       // If the three-viewer element exists, create a new ThreeDViewer instance and attach it to the element.
       if (threeViewerElement) {
-        /**
-         * Sets up the view manager.
-         * @return {Viewer}
-         */
-        const viewer =  new ThreeDViewer(threeViewerElement, settings, drupalSettings.isProd ?? true);
 
-        viewer.loadModel(settings.file_url, settings.model_ext);
+        try {
+          /**
+           * Sets up the view manager.
+           * @return {Viewer}
+           */
+          const viewer = new ThreeDViewer(threeViewerElement, settings, drupalSettings.isProd ?? true);
+
+          viewer.loadModel(settings.file_url, settings.model_ext);
+        }
+        catch (err) {
+           drupalSettings.isProd && console.log("An error occurred: " + err);
+        }
+
       }
     },
   };
