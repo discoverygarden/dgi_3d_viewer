@@ -65,18 +65,6 @@ class DgiThreejsFileWidget extends FileWidget {
       }
       else {
         $preview_settings['model_ext'] = $file_ext;
-        // If this is an ajax call, this does not really work
-        // because update of drupalSettings requires a page reload.
-//        $camera = $form_state->getValue('field_camera')[0]['subform'] ?? NULL;
-//
-//        if ($camera) {
-//          $preview_settings['camera_settings'] = self::cameraArrayToThreejsSettings($camera);
-//        }
-//
-//        if (!empty($form_state->getValue('field_light'))) {
-//          $preview_settings['light'] = $form_state->getValue('field_light');
-//        }
-
         // The file exists and is a supported format, so we can add the viewer.
         $preview_settings['file_url'] = $file->createFileUrl();
         // Define the preview container.
