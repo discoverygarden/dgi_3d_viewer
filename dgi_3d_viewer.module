@@ -1,0 +1,77 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations.
+ */
+
+use Drupal\Core\Asset\AttachedAssetsInterface;
+use Drupal\paragraphs\ParagraphInterface;
+use Drupal\media\MediaInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function dgi_3d_viewer_media_presave(MediaInterface $media) {
+  if ($media->bundle() !== '3d_object') {
+    return;
+  }
+  $camera = $media->get('field_camera')->referencedEntities()[0] ?? NULL;
+
+  if (!$camera) {
+    $media->field_customcamera = NULL;
+    return;
+  }
+
+  $camera_settings = dgi_3d_viewer_flatten_camera_values($camera);
+
+  $media->field_customcamera = serialize($camera_settings);
+}
+
+/**
+ * Flatten camera values.
+ */
+function dgi_3d_viewer_flatten_camera_values(ParagraphInterface $camera) {
+  $type = $camera->bundle();
+  $camera_settings = [
+    'settings' => [
+      'near' => $camera->field_near->value,
+      'far' => $camera->field_far->value,
+      'position' => [
+        'x' => $camera->field_position_x->value,
+        'y' => $camera->field_position_y->value,
+        'z' => $camera->field_position_z->value,
+      ],
+      'rotation' => [
+        'x' => $camera->field_rotation_x->value,
+        'y' => $camera->field_rotation_y->value,
+        'z' => $camera->field_rotation_z->value,
+      ],
+    ],
+  ];
+  switch ($type) {
+    case 'orthographic_camera_settings':
+      $camera_settings['type'] = 'OrthographicCamera';
+      $camera_settings['settings']['top'] = $camera->field_top->value;
+      $camera_settings['settings']['bottom'] = $camera->field_bottom->value;
+      $camera_settings['settings']['left'] = $camera->field_left->value;
+      $camera_settings['settings']['right'] = $camera->field_right->value;
+      break;
+
+    case 'perspective_camera_settings':
+      $camera_settings['type'] = 'PerspectiveCamera';
+      $camera_settings['settings']['aspect'] = $camera->field_aspect->value;
+      $camera_settings['settings']['fov'] = $camera->field_fov->value;
+      break;
+  }
+
+  return $camera_settings;
+}
+
+/**
+ * Implements hook_js_settings_alter().
+ */
+function dgi_3d_viewer_js_settings_alter(array &$settings, AttachedAssetsInterface $assets) {
+  // Check if prod split is enabled.
+  $settings['isProd'] = \Drupal::config('config_split.config_split.prod')->get('status');
+}
