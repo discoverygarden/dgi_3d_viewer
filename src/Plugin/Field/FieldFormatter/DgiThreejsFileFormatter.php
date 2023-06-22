@@ -80,7 +80,7 @@ class DgiThreejsFileFormatter extends FileFormatterBase {
         $viewer_settings['light'] = $light;
       }
 
-      if ($objArchive = $parent->field_materials_zip) {
+      if ($objArchive = $parent->field_materials_zip && $objArchive->entity) {
         $viewer_settings['compressed_resources_url'] = $objArchive->entity->createFileUrl();
       }
 
