@@ -51,7 +51,7 @@ import {ThreeDViewer} from './ThreeDViewer.js';
           viewer.loadModel(settings.file_url, settings.model_ext);
         }
         catch (err) {
-           drupalSettings.isProd && console.log("An error occurred: " + err);
+          drupalSettings.isProd && console.log("An error occurred: " + err);
         }
 
       }
