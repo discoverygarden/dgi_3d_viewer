@@ -3,6 +3,7 @@ import {GLTFLoader} from 'addons/loaders/GLTFLoader.js';
 import {OBJLoader} from 'addons/loaders/OBJLoader.js';
 import {MTLLoader} from 'addons/loaders/MTLLoader.js';
 import {OrbitControls} from 'addons/controls/OrbitControls.js';
+import {RoomEnvironment} from 'addons/environments/RoomEnvironment.js';
 import * as JSZip from 'jszip';
 import * as JSZipUtils from 'jszip-utils';
 
@@ -18,6 +19,7 @@ export class ThreeDViewer {
     this.camera.position.set(0, 1, -10);
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.manager = new THREE.LoadingManager();
+    this.pmremGenerator = new THREE.PMREMGenerator(this.renderer);
     this.materials = [];
     this.loader = [];
 
@@ -65,16 +67,7 @@ export class ThreeDViewer {
   }
 
   createCameraFromSettings() {
-    if (this.settings.camera_settings.type === 'OrthographicCamera') {
-      this.camera = new THREE.OrthographicCamera(
-        this.settings.camera_settings.settings.left,
-        this.settings.camera_settings.settings.right,
-        this.settings.camera_settings.settings.top,
-        this.settings.camera_settings.settings.bottom,
-        this.settings.camera_settings.settings.near,
-        this.settings.camera_settings.settings.far
-      );
-    } else if (this.settings.camera_settings.type == 'PerspectiveCamera') {
+    if (this.settings.camera_settings.type === 'PerspectiveCamera') {
       this.camera = new THREE.PerspectiveCamera(
         this.settings.camera_settings.settings.fov,
         this.settings.camera_settings.settings.aspect,
@@ -110,15 +103,7 @@ export class ThreeDViewer {
       this.log && console.log('Using default camera.' + this.camera.type);
     }
 
-    // Override light.
-    if ("light" in this.settings) {
-      this.log && console.log('Using overridden light from settings.');
-      this.createLightFromSettings();
-    } else {
-      this.log && console.log('Using default light.');
-      let light = new THREE.AmbientLight(); // White light
-      this.scene.add(light);
-    }
+    this.loadModelViewer();
 
     // Instantiating controls in the constructor does not work
     // because we are updating camera dynamically.
@@ -140,56 +125,12 @@ export class ThreeDViewer {
       this.camera = gltf.cameras[0];
     }
 
-    // Override light.
-    if ("light" in this.settings) {
-      this.log && console.log('Using overridden light from settings.');
-      this.createLightFromSettings();
-    } else if (!this.hasLights(gltf)) {
-      this.log && console.log('Using default light.');
-      let light = new THREE.AmbientLight(); // White light
-      this.scene.add(light);
-    }
+    this.loadModelViewer();
 
     // Instantiating controls in the constructor does not work
     // because we are updating camera dynamically.
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.render();
-  }
-
-  createLightFromSettings() {
-    var light = [];
-    switch (this.settings.light) {
-      case 'PointLight':
-        light = new THREE.PointLight();
-        break;
-      case 'DirectionalLight':
-        light = new THREE.DirectionalLight();
-        break;
-      case 'SpotLight':
-        light = new THREE.SpotLight();
-        break;
-      case 'HemisphereLight':
-        light = new THREE.HemisphereLight();
-        break;
-      case 'AmbientLight':
-      default:
-        light = new THREE.AmbientLight();
-        break;
-    }
-
-    this.scene.add(light);
-  }
-
-  hasLights(gltf) {
-    let hasLights = false;
-
-    gltf.scene.traverse((child) => {
-      if (child instanceof THREE.Light) {
-        hasLights = true;
-      }
-    });
-
-    return hasLights;
   }
 
   onWindowResize() {
@@ -253,34 +194,42 @@ export class ThreeDViewer {
   loadObj(url) {
     this.log && console.log('Beginning to render ' + url + ' with obj loader');
     this.loader = new OBJLoader(this.manager);
-    if ("compressed_resources_url" in this.settings) {
-      console.log('ca;l func');
-     // this.getMaterialsFromMtl.bind(this);
-      console.log('here');
+    if ('file_materials' in this.settings) {
       const loadingManager = new THREE.LoadingManager();
-      JSZipUtils.getBinaryContent(this.settings.compressed_resources_url, function (err, data) {
+
+      JSZipUtils.getBinaryContent(this.settings.file_materials, (err, data) => {
         if (err) {
           console.log(err);
         }
 
-        const mtlLoader = new MTLLoader(loadingManager);
-
         JSZip.loadAsync(data)
-          .then(function (zip) {
-            zip.forEach(function (relativePath, file) {
+          .then((zip) => {
+            zip.forEach((relativePath, file) => {
               console.log(relativePath);
               if (relativePath.match(/\.(mtl)$/i)) {
-                file.async("string")
-                  .then(function (content) {
-                    this.loader.createMaterial(mtlLoader.parse(content));
+                file.async('string')
+                  .then((content) => {
+                    const materials = new MTLLoader(loadingManager).parse(content);
+                    materials.preload();
+                    this.loader.setMaterials(materials);
                   });
               }
             });
           });
       });
     }
-
     this.loader.load(url, this.onObjLoaded.bind(this));
+  }
+
+  loadModelViewer() {
+    if ("room_environment" in this.settings) {
+      this.log && console.log('Using room environment.');
+      this.scene.environment = this.pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
+    } else {
+      this.log && console.log('Using default light.');
+      let light = new THREE.AmbientLight(); // White light
+      this.scene.add(light)
+    }
   }
 
   resizeCanvasToDisplaySize() {
