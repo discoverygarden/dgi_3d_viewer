@@ -253,33 +253,30 @@ export class ThreeDViewer {
   loadObj(url) {
     this.log && console.log('Beginning to render ' + url + ' with obj loader');
     this.loader = new OBJLoader(this.manager);
-    if ("compressed_resources_url" in this.settings) {
-      console.log('ca;l func');
-     // this.getMaterialsFromMtl.bind(this);
-      console.log('here');
+    if ('file_materials' in this.settings) {
       const loadingManager = new THREE.LoadingManager();
-      JSZipUtils.getBinaryContent(this.settings.compressed_resources_url, function (err, data) {
+
+      JSZipUtils.getBinaryContent(this.settings.file_materials, (err, data) => {
         if (err) {
           console.log(err);
         }
 
-        const mtlLoader = new MTLLoader(loadingManager);
-
         JSZip.loadAsync(data)
-          .then(function (zip) {
-            zip.forEach(function (relativePath, file) {
+          .then((zip) => {
+            zip.forEach((relativePath, file) => {
               console.log(relativePath);
               if (relativePath.match(/\.(mtl)$/i)) {
-                file.async("string")
-                  .then(function (content) {
-                    this.loader.createMaterial(mtlLoader.parse(content));
+                file.async('string')
+                  .then((content) => {
+                    const materials = new MTLLoader(loadingManager).parse(content);
+                    materials.preload();
+                    this.loader.setMaterials(materials);
                   });
               }
             });
           });
       });
     }
-
     this.loader.load(url, this.onObjLoaded.bind(this));
   }
 

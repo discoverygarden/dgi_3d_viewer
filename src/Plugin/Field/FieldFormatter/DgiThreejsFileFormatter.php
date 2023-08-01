@@ -64,7 +64,7 @@ class DgiThreejsFileFormatter extends FileFormatterBase {
       return [];
     }
 
-    $parent = $items->getParent()->getValue();
+    $entity = $items->getParent();
 
     // Get the file URL.
     $file_url = $entities[0]->createFileUrl();
@@ -72,16 +72,17 @@ class DgiThreejsFileFormatter extends FileFormatterBase {
       $viewer_settings = $this->getSetting('viewer_settings');
       $viewer_settings['file_url'] = $file_url;
       $viewer_settings['model_ext'] = pathinfo($file_url, PATHINFO_EXTENSION);
-      if ($customCamera = $parent->field_customcamera->value) {
+      if ($customCamera = $entity->get('field_customcamera')->value) {
         $viewer_settings['camera_settings'] = unserialize($customCamera, ['allowed_classes' => FALSE]);
       }
 
-      if ($light = $parent->field_light->value) {
+      if ($light = $entity->get('field_light')->value) {
         $viewer_settings['light'] = $light;
       }
 
-      if ($objArchive = $parent->field_materials_zip && $objArchive->entity) {
-        $viewer_settings['compressed_resources_url'] = $objArchive->entity->createFileUrl();
+      $objArchive = $entity->get('field_materials_zip');
+      if ($objArchive && $objArchive->entity) {
+        $viewer_settings['file_materials'] = $objArchive->entity->createFileUrl();
       }
 
       $this->setSetting('viewer_settings', $viewer_settings);
