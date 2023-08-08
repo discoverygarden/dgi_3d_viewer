@@ -25,14 +25,13 @@ export class ThreeDViewer {
 
     this.setRendererSettings();
 
-    this.container.appendChild(this.renderer.domElement);
-
     // Instantiate only once.
     if (this.container.classList.contains(this.settings.canvas_loaded_class)) {
       throw "Attempted to load ThreeJS viewer, but it has already been loaded.";
     }
     else {
       // Flag that the viewer has been loaded.
+      this.container.appendChild(this.renderer.domElement);
       this.container.classList.add(this.settings.canvas_loaded_class);
     }
 
