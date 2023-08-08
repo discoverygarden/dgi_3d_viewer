@@ -76,13 +76,13 @@ class DgiThreejsFileFormatter extends FileFormatterBase {
         $viewer_settings['camera_settings'] = unserialize($customCamera, ['allowed_classes' => FALSE]);
       }
 
-      if ($light = $entity->get('field_light')->value) {
-        $viewer_settings['light'] = $light;
-      }
-
       $objArchive = $entity->get('field_materials_zip');
       if ($objArchive && $objArchive->entity) {
         $viewer_settings['file_materials'] = $objArchive->entity->createFileUrl();
+      }
+
+      if ($roomEnv = $entity->get('field_room_environment')->value) {
+        $viewer_settings['room_environment'] = $roomEnv;
       }
 
       $this->setSetting('viewer_settings', $viewer_settings);

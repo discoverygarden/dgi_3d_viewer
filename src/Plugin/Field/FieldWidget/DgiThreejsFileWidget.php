@@ -101,9 +101,6 @@ class DgiThreejsFileWidget extends FileWidget {
     if (array_key_exists('field_aspect', $camera)) {
       $camera_settings['type'] = 'PerspectiveCamera';
     }
-    else {
-      $camera_settings['type'] = 'OrthographicCamera';
-    }
 
     foreach ($camera as $fieldName => $property) {
       // Create field name array.
