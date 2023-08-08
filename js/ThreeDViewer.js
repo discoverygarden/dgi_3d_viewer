@@ -225,10 +225,6 @@ export class ThreeDViewer {
     if ("room_environment" in this.settings) {
       this.log && console.log('Using room environment.');
       this.scene.environment = this.pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
-    } else {
-      this.log && console.log('Using default light.');
-      let light = new THREE.AmbientLight(); // White light
-      this.scene.add(light)
     }
   }
 
