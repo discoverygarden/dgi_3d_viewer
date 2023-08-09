@@ -68,22 +68,22 @@ export class ThreeDViewer {
   createCameraFromSettings() {
     if (this.settings.camera_settings.type === 'PerspectiveCamera') {
       this.camera = new THREE.PerspectiveCamera(
-        this.settings.camera_settings.settings.fov,
-        this.settings.camera_settings.settings.aspect,
-        this.settings.camera_settings.settings.near,
-        this.settings.camera_settings.settings.far
+        Number(this.settings.camera_settings.settings.fov),
+        Number(this.settings.camera_settings.settings.aspect),
+        Number(this.settings.camera_settings.settings.near),
+        Number(this.settings.camera_settings.settings.far)
       );
     }
 
     this.camera.position.set(
-      this.settings.camera_settings.settings.position.x,
-      this.settings.camera_settings.settings.position.y,
-      this.settings.camera_settings.settings.position.z
+      Number(this.settings.camera_settings.settings.position.x),
+      Number(this.settings.camera_settings.settings.position.y),
+      Number(this.settings.camera_settings.settings.position.z)
     );
     this.camera.rotation.set(
-      this.settings.camera_settings.settings.rotation.x,
-      this.settings.camera_settings.settings.rotation.y,
-      this.settings.camera_settings.settings.rotation.z
+      Number(this.settings.camera_settings.settings.rotation.x),
+      Number(this.settings.camera_settings.settings.rotation.y),
+      Number(this.settings.camera_settings.settings.rotation.z)
     );
   }
 
