@@ -4,7 +4,7 @@ module.exports = {
   entry: './js/test_threejs.es6.js',
   output: {
     filename: 'test_threejs.js',
-    path: path.resolve(__dirname, 'js'),
+    path: path.resolve(__dirname, 'js/dist'),
   },
   resolve: {
     alias: {
