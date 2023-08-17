@@ -6,8 +6,8 @@
  */
 
 use Drupal\Core\Asset\AttachedAssetsInterface;
-use Drupal\paragraphs\ParagraphInterface;
 use Drupal\media\MediaInterface;
+use Drupal\paragraphs\ParagraphInterface;
 
 /**
  * Implements hook_ENTITY_TYPE_presave().

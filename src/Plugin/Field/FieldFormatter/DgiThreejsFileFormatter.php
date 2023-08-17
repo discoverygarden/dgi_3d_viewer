@@ -3,8 +3,8 @@
 namespace Drupal\dgi_3d_viewer\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
 use Drupal\file\FileInterface;
+use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
 
 /**
  * Plugin implementation of the 'dgi_threejs_file_formatter' formatter.
@@ -20,7 +20,7 @@ use Drupal\file\FileInterface;
 class DgiThreejsFileFormatter extends FileFormatterBase {
 
   /**
-   * @inheritDoc
+   * {@inheritDoc}
    */
   public static function defaultSettings(): array {
     $viewer_settings = [
@@ -36,7 +36,7 @@ class DgiThreejsFileFormatter extends FileFormatterBase {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritDoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode): array {
     /**
