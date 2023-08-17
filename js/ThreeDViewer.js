@@ -183,6 +183,7 @@ export class ThreeDViewer {
     this.renderer.domElement.style.objectFit = 'contain';
   }
 
+
   loadGltf(url) {
     this.log && console.log('Beginning to render ' + url + ' with gltf loader');
     this.loader = new GLTFLoader(this.manager);
@@ -316,7 +317,7 @@ export class ThreeDViewer {
     });
 
     if (mtl_file !== null) {
-      let materials = new MTLLoader().parse(strFromU8(mtl_file));
+      let materials = new MTLLoader(this.manager).parse(strFromU8(mtl_file));
 
       if (Object.entries(obj_textures).length !== 0) {
 
