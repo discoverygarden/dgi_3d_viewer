@@ -53,18 +53,6 @@ export class ThreeDViewer {
 
 
   loadModel(url, fileType = 'gltf') {
-    // Add a loader.
-    var progressClass = this.settings.progress_element_classes;
-    this.manager.onProgress = function (item, loaded, total) {
-      let progress = Math.round(loaded / total * 100);
-      let progress_display = '';
-      if (progress < 100) {
-        progress_display = progress + '%';
-      }
-      document.getElementsByClassName(progressClass)[0].innerText = progress_display;
-    };
-
-    //  loader.load(url, this.onModelLoaded.bind(this));
     switch (this.settings.model_ext) {
       case "obj":
         this.loadObj(url);
