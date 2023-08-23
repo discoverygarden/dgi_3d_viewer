@@ -19,7 +19,7 @@ use Drupal\file\Plugin\Field\FieldWidget\FileWidget;
 class DgiThreejsFileWidget extends FileWidget {
 
   /**
-   * @inheritDoc
+   * {@inheritDoc}
    */
   public static function defaultSettings(): array {
     $preview_settings = [
@@ -51,7 +51,7 @@ class DgiThreejsFileWidget extends FileWidget {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritDoc}
    */
   public static function process($element, FormStateInterface $form_state, $form) {
     $preview_settings = static::defaultSettings()['preview_settings'];

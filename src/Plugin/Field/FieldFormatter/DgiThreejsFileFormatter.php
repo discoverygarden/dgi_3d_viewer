@@ -3,8 +3,8 @@
 namespace Drupal\dgi_3d_viewer\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
 use Drupal\file\FileInterface;
+use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
 
 /**
  * Plugin implementation of the 'dgi_threejs_file_formatter' formatter.
@@ -20,7 +20,7 @@ use Drupal\file\FileInterface;
 class DgiThreejsFileFormatter extends FileFormatterBase {
 
   /**
-   * @inheritDoc
+   * {@inheritDoc}
    */
   public static function defaultSettings(): array {
     $viewer_settings = [
@@ -36,7 +36,7 @@ class DgiThreejsFileFormatter extends FileFormatterBase {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritDoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode): array {
     /**
@@ -73,7 +73,7 @@ class DgiThreejsFileFormatter extends FileFormatterBase {
       $viewer_settings['file_url'] = $file_url;
       $viewer_settings['model_ext'] = pathinfo($file_url, PATHINFO_EXTENSION);
       if ($customCamera = $entity->get('field_customcamera')->value) {
-        $viewer_settings['camera_settings'] = unserialize($customCamera, ['allowed_classes' => FALSE]);
+        $viewer_settings['defaults']['camera_settings'] = unserialize($customCamera, ['allowed_classes' => FALSE]);
       }
 
       $objArchive = $entity->get('field_materials_zip');
@@ -82,7 +82,15 @@ class DgiThreejsFileFormatter extends FileFormatterBase {
       }
 
       if ($roomEnv = $entity->get('field_room_environment')->value) {
-        $viewer_settings['room_environment'] = $roomEnv;
+        $viewer_settings['defaults']['room_environment'] = $roomEnv;
+      }
+
+      if ($backgroundColor = $entity->get('field_background_color')->value) {
+        $viewer_settings['defaults']['background_color'] = $backgroundColor;
+      }
+
+      if ($defaultLights = $entity->get('field_add_default_lights')->value) {
+        $viewer_settings['defaults']['default_lights'] = $defaultLights;
       }
 
       $this->setSetting('viewer_settings', $viewer_settings);
