@@ -102,8 +102,7 @@ class DgiThreejsFileFormatter extends FileFormatterBase {
         '#children' => [
           'progress' => [
             '#type' => 'html_tag',
-            '#tag' => 'span',
-            '#value' => $this->t('Rendering...'),
+            '#tag' => 'div',
             '#attributes' => [
               'class' => $viewer_settings['progress_element_classes'],
             ],

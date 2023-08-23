@@ -5,7 +5,7 @@ import {MTLLoader} from 'addons/loaders/MTLLoader.js';
 import {OrbitControls} from 'addons/controls/OrbitControls.js';
 import {RoomEnvironment} from 'addons/environments/RoomEnvironment.js';
 import {strFromU8, unzipSync} from "addons/libs/fflate.module";
-import {DirectionalLight} from "three";
+import {Spinner} from "spin.js";
 
 export class ThreeDViewer {
 
@@ -22,6 +22,19 @@ export class ThreeDViewer {
     this.pmremGenerator = new THREE.PMREMGenerator(this.renderer);
     this.materials = [];
     this.loader = [];
+
+    // Add a spin loader.
+    var target = document.getElementsByClassName(this.settings.progress_element_classes)[0];
+    var spinner = new Spinner();
+
+    this.manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
+      spinner.spin(target);
+    };
+
+    this.manager.onLoad = function ( ) {
+      spinner.stop();
+    };
+
 
     this.setRendererSettings();
 
