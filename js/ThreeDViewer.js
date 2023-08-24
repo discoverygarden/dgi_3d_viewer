@@ -244,7 +244,7 @@ export class ThreeDViewer {
 
     // Poly
 
-    Object.keys(zip).forEach(key => {
+    Object.keys(zip).filter(key => !key.startsWith('__MACOSX')).forEach(key => {
 
       let key_lc = key.toLowerCase();
 
