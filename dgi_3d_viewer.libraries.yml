@@ -11,6 +11,9 @@ test_threejs:
 
 # The compiled js for rendering a viewer powered by Three.js
 dgi_3d_viewer:
+  css:
+    theme:
+      css/spin.css: { }
   js:
     js/dist/dgi_3d_viewer.js:
       attributes:

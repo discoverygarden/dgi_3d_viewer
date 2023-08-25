@@ -5,7 +5,7 @@ import {MTLLoader} from 'addons/loaders/MTLLoader.js';
 import {OrbitControls} from 'addons/controls/OrbitControls.js';
 import {RoomEnvironment} from 'addons/environments/RoomEnvironment.js';
 import {strFromU8, unzipSync} from "addons/libs/fflate.module";
-import {DirectionalLight} from "three";
+import {Spinner} from "spin.js";
 
 export class ThreeDViewer {
 
@@ -22,6 +22,40 @@ export class ThreeDViewer {
     this.pmremGenerator = new THREE.PMREMGenerator(this.renderer);
     this.materials = [];
     this.loader = [];
+
+    // Add a spin loader.
+    var target = document.getElementsByClassName(this.settings.progress_element_classes)[0];
+
+    var opts = {
+      lines: 13, // The number of lines to draw
+      length: 38, // The length of each line
+      width: 17, // The line thickness
+      radius: 45, // The radius of the inner circle
+      scale: 1, // Scales overall size of the spinner
+      corners: 1, // Corner roundness (0..1)
+      speed: 1.6, // Rounds per second
+      rotate: 0, // The rotation offset
+      animation: 'spinner-line-fade-quick', // The CSS animation name for the lines
+      direction: 1, // 1: clockwise, -1: counterclockwise
+      color: 'green', // CSS color or array of colors
+      fadeColor: 'lightgreen', // CSS color or array of colors
+      top: '50%', // Top position relative to parent
+      left: '50%', // Left position relative to parent
+      shadow: '0 0 1px transparent', // Box-shadow for the lines
+      zIndex: 2000000000, // The z-index (defaults to 2e9)
+      className: 'spinner', // The CSS class to assign to the spinner
+      position: 'absolute', // Element positioning
+    };
+    var spinner = new Spinner(opts);
+
+    this.manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
+      spinner.spin(target);
+    };
+
+    this.manager.onLoad = function ( ) {
+      spinner.stop();
+    };
+
 
     this.setRendererSettings();
 
@@ -40,18 +74,6 @@ export class ThreeDViewer {
 
 
   loadModel(url, fileType = 'gltf') {
-    // Add a loader.
-    var progressClass = this.settings.progress_element_classes;
-    this.manager.onProgress = function (item, loaded, total) {
-      let progress = Math.round(loaded / total * 100);
-      let progress_display = '';
-      if (progress < 100) {
-        progress_display = progress + '%';
-      }
-      document.getElementsByClassName(progressClass)[0].innerText = progress_display;
-    };
-
-    //  loader.load(url, this.onModelLoaded.bind(this));
     switch (this.settings.model_ext) {
       case "obj":
         this.loadObj(url);
@@ -243,7 +265,7 @@ export class ThreeDViewer {
 
     // Poly
 
-    Object.keys(zip).forEach(key => {
+    Object.keys(zip).filter(key => !key.startsWith('__MACOSX')).forEach(key => {
 
       let key_lc = key.toLowerCase();
 
