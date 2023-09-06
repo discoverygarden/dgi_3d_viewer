@@ -79,18 +79,8 @@ changes or the rest of the setup, see `js/test_threejs.es6.js`,
 `webpack_test_threejs.config.js`, and the `build-test` script in `package.json`.
 Try deleting `js/test_threejs.js` and recompiling it with `npm run build-test`.
 
-## TODO
-* Add support for more 3D model formats.
-  * Specifically OBJ with MTL, to avoid the need for a GLTF derivative.
-  * Also, any other formats that are supported by three.js would be nice to have.
-* Add support for configurable camera, lighting, and other scene settings.
-  * Such scene settings would need to be set per Media object and accessible by the file formatter plugin.
-  * It is reasonable to expect formats like GLTF to have their own scene settings within the file itself.
-  * However, if the file does not have scene settings, then the formatter plugin should be able to set appropriate values from user input for each file.
-* Add support for configurable controls. (long-term interesting feature)
-  * The usual default controls are OrbitControls, which allow the user to rotate the model around the camera,
-    and to zoom in and out. However, there are other controls that could provide a different user experience,
-    like controls for a first-person perspective moving through a scene.
+## Sponsors
+* [UNR](https://library.unr.edu/)
 
 ## Maintainers
 Current maintainers:
