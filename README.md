@@ -3,7 +3,8 @@
 ## Introduction
 This module provides display plugins for 3D model files in Drupal.
 Currently, the following formats are supported:
-* GLTF
+* GLTF/GLB - GLB is preferred, since some browsers fail to handle large GLTFs.
+* OBJ
 
 ## Three.js Library Usage Notes
 Given that Drupal does not yet fully support ES6 modules, specifically
@@ -20,6 +21,11 @@ This module requires the following modules/libraries:
 * [Three.js 0.151.0](https://github.com/mrdoob/three.js/releases/tag/r151 )
   * And the following 'Add-ons':
     * [GLTFLoader](https://github.com/mrdoob/three.js/blob/r151/examples/jsm/loaders/GLTFLoader.js)
+    * [OBJLoader](https://github.com/mrdoob/three.js/blob/r151/examples/jsm/loaders/OBJLoader.js)
+    * [MTLLoader](https://github.com/mrdoob/three.js/blob/r151/examples/jsm/loaders/MTLLoader.js)
+    * [OrbitControls](https://github.com/mrdoob/three.js/blob/r151/examples/jsm/controls/OrbitControls.js)
+    * [RoomEnvironment](https://github.com/mrdoob/three.js/blob/r151/examples/jsm/environments/RoomEnvironment.js)
+    * [strFromU8, unzipSync](https://github.com/mrdoob/three.js/blob/r151/examples/jsm/libs/fflate.module.js)
 * [Node.js](https://nodejs.org/en/)
 * [NPM](https://www.npmjs.com/)
 * [Webpack](https://webpack.js.org/)
