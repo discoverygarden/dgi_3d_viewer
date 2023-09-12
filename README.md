@@ -44,6 +44,25 @@ The preview provided by the widget could be useful for users to verify that they
 and to verify that the file is supported by the 3D viewer. However, the preview loading time can be slow, depending
 on the model being previewed, and so it may be best to use the regular file widget in some cases.
 
+### Bonus configuration: Camera, Lights, Textures
+The following is a work in progress to be replaced by a MediaSource Plugin
+
+Sometimes we want to accommodate viewing a 3D model that does not include anything aside from the object itself in
+the uploaded file, so we need a way to configure a camera and some light; without light and something to perceive
+the light bouncing off the model, only darkness is rendered. Additionally, sometimes we would rather not generate
+a GLB, and just upload the OBJ and related MTL and texture files. These capabilities are available, but rely on
+the existence of certain configuration entities.
+
+Configuration expectations:
+* media.type.3d_object
+  * field_media_file: the field that uses the 3D File Formatter
+  * field_customcamera: programmatically flattened values from field_camera
+  * field_camera: Entity reference link to paragraphs.paragraphs_type.perspective_camera_settings
+  * field_materials_zip
+  * field_room_environment
+  * field_background_color
+  * field_add_default_lights
+
 ## Usage
 Once the module is installed and configured, file fields using the `3D Model File` formatter to display a file field
 will render the 3D model in the browser, provided the file is a supported format.
