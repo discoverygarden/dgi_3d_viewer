@@ -3,7 +3,8 @@
 ## Introduction
 This module provides display plugins for 3D model files in Drupal.
 Currently, the following formats are supported:
-* GLTF
+* GLTF/GLB - GLB is preferred, since some browsers fail to handle large GLTFs.
+* OBJ
 
 ## Three.js Library Usage Notes
 Given that Drupal does not yet fully support ES6 modules, specifically
@@ -20,6 +21,11 @@ This module requires the following modules/libraries:
 * [Three.js 0.151.0](https://github.com/mrdoob/three.js/releases/tag/r151 )
   * And the following 'Add-ons':
     * [GLTFLoader](https://github.com/mrdoob/three.js/blob/r151/examples/jsm/loaders/GLTFLoader.js)
+    * [OBJLoader](https://github.com/mrdoob/three.js/blob/r151/examples/jsm/loaders/OBJLoader.js)
+    * [MTLLoader](https://github.com/mrdoob/three.js/blob/r151/examples/jsm/loaders/MTLLoader.js)
+    * [OrbitControls](https://github.com/mrdoob/three.js/blob/r151/examples/jsm/controls/OrbitControls.js)
+    * [RoomEnvironment](https://github.com/mrdoob/three.js/blob/r151/examples/jsm/environments/RoomEnvironment.js)
+    * [strFromU8, unzipSync](https://github.com/mrdoob/three.js/blob/r151/examples/jsm/libs/fflate.module.js)
 * [Node.js](https://nodejs.org/en/)
 * [NPM](https://www.npmjs.com/)
 * [Webpack](https://webpack.js.org/)
@@ -37,6 +43,25 @@ used independently of the widget if you do not want file preview added to the in
 The preview provided by the widget could be useful for users to verify that they have uploaded the correct file,
 and to verify that the file is supported by the 3D viewer. However, the preview loading time can be slow, depending
 on the model being previewed, and so it may be best to use the regular file widget in some cases.
+
+### Bonus configuration: Camera, Lights, Textures
+The following is a work in progress to be replaced by a MediaSource Plugin
+
+Sometimes we want to accommodate viewing a 3D model that does not include anything aside from the object itself in
+the uploaded file, so we need a way to configure a camera and some light; without light and something to perceive
+the light bouncing off the model, only darkness is rendered. Additionally, sometimes we would rather not generate
+a GLB, and just upload the OBJ and related MTL and texture files. These capabilities are available, but rely on
+the existence of certain configuration entities.
+
+Configuration expectations:
+* media.type.3d_object
+  * field_media_file: the field that uses the 3D File Formatter
+  * field_customcamera: programmatically flattened values from field_camera
+  * field_camera: Entity reference link to paragraphs.paragraphs_type.perspective_camera_settings
+  * field_materials_zip
+  * field_room_environment
+  * field_background_color
+  * field_add_default_lights
 
 ## Usage
 Once the module is installed and configured, file fields using the `3D Model File` formatter to display a file field
@@ -79,18 +104,8 @@ changes or the rest of the setup, see `js/test_threejs.es6.js`,
 `webpack_test_threejs.config.js`, and the `build-test` script in `package.json`.
 Try deleting `js/test_threejs.js` and recompiling it with `npm run build-test`.
 
-## TODO
-* Add support for more 3D model formats.
-  * Specifically OBJ with MTL, to avoid the need for a GLTF derivative.
-  * Also, any other formats that are supported by three.js would be nice to have.
-* Add support for configurable camera, lighting, and other scene settings.
-  * Such scene settings would need to be set per Media object and accessible by the file formatter plugin.
-  * It is reasonable to expect formats like GLTF to have their own scene settings within the file itself.
-  * However, if the file does not have scene settings, then the formatter plugin should be able to set appropriate values from user input for each file.
-* Add support for configurable controls. (long-term interesting feature)
-  * The usual default controls are OrbitControls, which allow the user to rotate the model around the camera,
-    and to zoom in and out. However, there are other controls that could provide a different user experience,
-    like controls for a first-person perspective moving through a scene.
+## Sponsors
+* [UNR](https://library.unr.edu/)
 
 ## Maintainers
 Current maintainers:
