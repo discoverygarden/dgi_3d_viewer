@@ -4,14 +4,9 @@ package: Media
 type: module
 core_version_requirement: ^9
 dependencies:
-  - entity_reference_revisions:entity_reference_revisions
   - drupal:field
-  - field_group:field_group
   - drupal:file
-  - filehash:filehash
   - drupal:language
   - drupal:media
-  - paragraphs:paragraphs
   - drupal:path
-  - islandora:islandora
-  - islandora_defaults:islandora_defaults
+  - paragraphs:paragraphs
