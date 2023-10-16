@@ -3,6 +3,9 @@
   "type": "drupal-module",
   "description": "Provide a viewer for 3D objects in Drupal.",
   "license": "GPL-3.0-only",
+  "require": {
+    "drupal/paragraphs": "^1"
+  },
   "require-dev": {
     "npm-asset/three": "^0.151.0"
   }
