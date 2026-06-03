@@ -4,19 +4,13 @@ spinner:
     theme:
       css/spin.css: { }
   js:
-    js/dist/spinjs.bundle.js:
-      attributes:
-        type: module
+    js/dist/spinjs.bundle.js: { }
 three:
   js:
-    js/dist/three.bundle.js:
-      attributes:
-        type: module
+    js/dist/three.bundle.js: { }
 dgi_3d_viewer:
   js:
-    js/dist/dgi_3d_viewer.bundle.js:
-      attributes:
-        type: module
+    js/dist/dgi_3d_viewer.bundle.js: { }
   dependencies:
     - core/drupal
     - core/drupalSettings
