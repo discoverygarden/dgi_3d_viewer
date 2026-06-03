@@ -6,12 +6,6 @@ module.exports = {
     filename: 'test_threejs.js',
     path: path.resolve(__dirname, 'js/dist'),
   },
-  resolve: {
-    alias: {
-      three: path.resolve(__filename, '/opt/www/drupal/libraries/three/build/three.module.js'),
-      addons: path.resolve(__dirname, '/opt/www/drupal/libraries/three/examples/jsm/')
-    }
-  },
   module: {
     rules: [
       {

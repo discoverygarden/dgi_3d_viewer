@@ -73,31 +73,17 @@ For more information on the three.js library, and 3D model formats, see the foll
 * [GLTF](https://www.khronos.org/gltf/)
 
 ## Development
-This module uses Webpack to compile the three.js library and our usage of it into a single file.
-### Three.js Library Installation
-Desired outcome: The appropriate version of three.js exists in
-`/opt/www/drupal/libraries/three`; if the location needs to change, then
-adjust the webpack.config.js file accordingly.
 
-#### A Composer way to install three.js:
-1. Add npm-asset handling to your drupal-project composer.json.
-* See [this](https://www.drupal.org/docs/develop/using-composer/manage-dependencies#third-party-libraries) for more information.
-* Make sure to add the following to the `extra` section of your composer.json:
-  ```
-  "installer-paths": {
-    "libraries/{$name}": ["type:npm-asset"]
-  }
-  ```
-2. Run `composer require npm-asset/three:^0.151.0` in the drupal-project root directory.
+This module uses Webpack to compile the three.js library and our usage of it into a small set of files.
 
-#### A manual way to install three.js:
-1. In `/opt/www/drupal/libraries`, run `git clone --branch=<version tag> --depth=1 https://github.com/mrdoob/three.js.git`
-   It's a rather large repo, so the `--depth=1` option is recommended to avoid downloading the entire history.
+### Library Compilation
 
-### Three.js Library Compilation
 1. In the module root directory, run `npm install` to install the required packages.
-2. Make sure the three.js library is installed in the correct location expected by webpack.config.js.
-3. Make desired changes to the `js/*.es6.js` file(s), and run `webpack` to compile it to `js/*.js`.
+2. Make desired changes to the `js/*.es6.js` file(s)
+3. Compile the packages with:
+   * `npm run build-dev`; or,
+   * `npm run build-prod` as desired
+   * or some other invocation of `webpack` to compile it to `js/dist/*.js`.
 
 For an example of compilation, and a way to check if issues are with your code
 changes or the rest of the setup, see `js/test_threejs.es6.js`,

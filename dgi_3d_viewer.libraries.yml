@@ -1,24 +1,24 @@
-# Test library for compiling threejs pieces into a single file.
-test_threejs:
-  js:
-    js/dist/test_threejs.js:
-      attributes:
-        type: module
-  dependencies:
-    - core/jquery
-    - core/drupal
-    - core/drupalSettings
-
 # The compiled js for rendering a viewer powered by Three.js
-dgi_3d_viewer:
+spinner:
   css:
     theme:
       css/spin.css: { }
   js:
-    js/dist/dgi_3d_viewer.js:
+    js/dist/spinjs.bundle.js:
+      attributes:
+        type: module
+three:
+  js:
+    js/dist/three.bundle.js:
+      attributes:
+        type: module
+dgi_3d_viewer:
+  js:
+    js/dist/dgi_3d_viewer.bundle.js:
       attributes:
         type: module
   dependencies:
-    - core/jquery
     - core/drupal
     - core/drupalSettings
+    - dgi_3d_viewer/spinner
+    - dgi_3d_viewer/three

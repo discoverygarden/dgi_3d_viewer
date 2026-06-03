@@ -1,10 +1,10 @@
 import * as THREE from 'three';
-import {GLTFLoader} from 'addons/loaders/GLTFLoader.js';
-import {OBJLoader} from 'addons/loaders/OBJLoader.js';
-import {MTLLoader} from 'addons/loaders/MTLLoader.js';
-import {OrbitControls} from 'addons/controls/OrbitControls.js';
-import {RoomEnvironment} from 'addons/environments/RoomEnvironment.js';
-import {strFromU8, unzipSync} from "addons/libs/fflate.module";
+import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
+import {OBJLoader} from 'three/examples/jsm/loaders/OBJLoader.js';
+import {MTLLoader} from 'three/examples/jsm/loaders/MTLLoader.js';
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
+import {RoomEnvironment} from 'three/examples/jsm/environments/RoomEnvironment.js';
+import {strFromU8, unzipSync} from "three/examples/jsm/libs/fflate.module";
 import {Spinner} from "spin.js";
 
 export class ThreeDViewer {
@@ -194,6 +194,7 @@ export class ThreeDViewer {
   }
 
   setRendererSettings() {
+    this.renderer.outputEncoding = THREE.sRGBEncoding; // (<= r151)
     // Just a size for the renderer to start with.
     // This will be updated in the render() function.
     this.renderer.setSize(window.innerWidth, window.innerHeight);
