@@ -1,4 +1,3 @@
-// jshint browser: false, esversion: 11
 const path = require('path');
 
 module.exports = {
