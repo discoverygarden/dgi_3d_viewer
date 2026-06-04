@@ -5,11 +5,11 @@ module.exports = {
     dgi_3d_viewer: {
       import: './js/dgi_3d_viewer.es6.js',
       dependOn: [
-        "three",
+        // "three",
         "spinjs",
       ],
     },
-    three: "three",
+    // three: "three",
     spinjs: "spin.js",
   },
   output: {
