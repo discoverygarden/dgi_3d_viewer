@@ -2,9 +2,9 @@
  * @file
  * A Drupal behavior to display a 3D model using ThreeJS.
  */
-import {ThreeDViewer} from './ThreeDViewer.js';
+import {ThreeDViewer} from './ThreeDViewer.es6.js';
 
-(function ($, Drupal, drupalSettings) {
+(function (Drupal, drupalSettings) {
   'use strict';
 
   Drupal.behaviors.dgi3DViewer = {
@@ -57,4 +57,4 @@ import {ThreeDViewer} from './ThreeDViewer.js';
       }
     },
   };
-}(jQuery, Drupal, drupalSettings));
+}(Drupal, drupalSettings));

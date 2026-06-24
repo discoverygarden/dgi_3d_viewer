@@ -4,7 +4,7 @@
  */
 import * as THREE from 'three';
 // The following line is not needed, but it to verify addons are working.
-import { GLTFLoader } from 'addons/loaders/GLTFLoader.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 const loader = new GLTFLoader();
 
 (function ($, Drupal, drupalSettings, once) {
