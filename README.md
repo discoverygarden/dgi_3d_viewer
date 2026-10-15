@@ -63,6 +63,11 @@ Configuration expectations:
   * field_background_color
   * field_add_default_lights
 
+The camera is chosen in this order: a camera configured through `field_camera`; otherwise, for GLB/GLTF, the
+first camera in the file; otherwise the viewer frames the model automatically, backing the camera off along its
+default viewing direction until the whole model fits the view and orbiting around the model's centre. The model
+itself is never moved or rescaled.
+
 ## Usage
 Once the module is installed and configured, file fields using the `3D Model File` formatter to display a file field
 will render the 3D model in the browser, provided the file is a supported format.
