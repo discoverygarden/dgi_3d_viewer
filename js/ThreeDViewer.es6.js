@@ -7,6 +7,9 @@ import {RoomEnvironment} from 'three/examples/jsm/environments/RoomEnvironment.j
 import {strFromU8, unzipSync} from "three/examples/jsm/libs/fflate.module";
 import {Spinner} from "spin.js";
 
+// Extra room around a framed model, as a multiple of the tight fit.
+const FRAMING_MARGIN = 1.1;
+
 export class ThreeDViewer {
 
   constructor(container, settings, isProd) {
@@ -17,6 +20,8 @@ export class ThreeDViewer {
     this.settings = settings;
     this.camera = new THREE.PerspectiveCamera(67, window.innerWidth / window.innerHeight, 0.1, 800);
     this.camera.position.set(0, 1, -10);
+    // The point the camera looks at and orbits around.
+    this.target = new THREE.Vector3(0, 0, 0);
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.manager = new THREE.LoadingManager();
     this.pmremGenerator = new THREE.PMREMGenerator(this.renderer);
@@ -156,11 +161,14 @@ export class ThreeDViewer {
 
   onObjLoaded(obj) {
     this.scene.add(obj);
-    this.addDefaults();
+    let defaults = this.addDefaults();
 
-    // Instantiating controls in the constructor does not work
-    // because we are updating camera dynamically.
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    // Frame the model unless a camera has been configured.
+    if (!defaults.includes('camera_settings')) {
+      this.frameObject(obj);
+    }
+
+    this.createControls();
     this.render();
   }
 
@@ -168,16 +176,68 @@ export class ThreeDViewer {
     this.scene.add(gltf.scene);
     let defaults = this.addDefaults();
 
-    // Set camera from gltf if not overridden.
-    if (!("camera_settings" in defaults) && gltf.cameras.length > 0) {
+    // A configured camera wins; then a camera in the file; otherwise frame
+    // the model.
+    if (defaults.includes('camera_settings')) {
+      this.log && console.log('Using configured camera.');
+    }
+    else if (gltf.cameras.length > 0) {
       this.log && console.log('Using camera from uploaded file.');
       this.camera = gltf.cameras[0];
     }
+    else {
+      this.frameObject(gltf.scene);
+    }
 
+    this.createControls();
+    this.render();
+  }
+
+  createControls() {
     // Instantiating controls in the constructor does not work
     // because we are updating camera dynamically.
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.render();
+    this.controls.target.copy(this.target);
+  }
+
+  /**
+   * Points the camera at a model and backs it off until the model fits.
+   *
+   * The default camera sits 10 units from the origin whatever the model's
+   * size, so real-world-scale models (scans are usually in metres) first
+   * appear tiny, and a model that isn't built around the origin orbits
+   * off-centre. This keeps the default camera's viewing direction and only
+   * changes its distance, clipping planes and the orbit target, so the model
+   * itself (and its real dimensions) is left alone.
+   */
+  frameObject(obj) {
+    const box = new THREE.Box3().setFromObject(obj);
+    if (box.isEmpty()) {
+      return;
+    }
+    const sphere = box.getBoundingSphere(new THREE.Sphere());
+    if (!(sphere.radius > 0)) {
+      return;
+    }
+
+    // Fit the bounding sphere into the narrower of the two fields of view,
+    // so the model also fits a tall, narrow (e.g. mobile) viewer.
+    const width = this.container.clientWidth;
+    const height = this.container.clientHeight;
+    const aspect = (width && height) ? width / height : this.camera.aspect;
+    const verticalFov = THREE.MathUtils.degToRad(this.camera.fov);
+    const horizontalFov = 2 * Math.atan(Math.tan(verticalFov / 2) * aspect);
+    const fov = Math.min(verticalFov, horizontalFov);
+    const distance = FRAMING_MARGIN * sphere.radius / Math.sin(fov / 2);
+
+    const direction = this.camera.position.clone().sub(this.target).normalize();
+    this.target.copy(sphere.center);
+    this.camera.position.copy(sphere.center).addScaledVector(direction, distance);
+    this.camera.near = distance / 100;
+    this.camera.far = distance * 100;
+    this.camera.lookAt(this.target);
+    this.camera.updateProjectionMatrix();
+    this.log && console.log('Framed model: radius ' + sphere.radius.toFixed(3) + ', camera distance ' + distance.toFixed(3) + '.');
   }
 
   onWindowResize() {
@@ -240,7 +300,7 @@ export class ThreeDViewer {
       // you must pass false here or three.js sadly fights the browser
       this.renderer.setSize(width, height, false);
       this.camera.aspect = width / height;
-      this.camera.lookAt(0, 0, 0);
+      this.camera.lookAt(this.target);
       this.camera.updateProjectionMatrix();
     }
   }
